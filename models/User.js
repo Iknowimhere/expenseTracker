@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import validator from 'validator';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new Schema({
   phoneNumber: {
@@ -19,14 +20,26 @@ const userSchema = new Schema({
   confirmPassword: {
     type: String,
     required: [true, 'Password field is required'],
+    validate: {
+      validator: function (value) {
+        return this.password === value;
+      },
+      message: "password and confirm password doesn't match",
+    },
   },
+  resetPasswordToken: String, // Store the token for password reset
+  resetPasswordExpires: Date, // Expiry time for the reset token
 });
 
-userSchema.pre('save',function(next){
-    if(this.password===this.confirmPassword){
-        next()
-    }
+userSchema.pre('save', async function (next) {
+  let salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
+
+userSchema.methods.comparePassword=async function(pwd,pwdDB){
+  return await bcrypt.compare(pwd,pwdDB)
+}
 
 const User = model('User', userSchema);
 
