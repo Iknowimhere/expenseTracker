@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+import { sendMail } from '../utils/sendEmail.js';
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -57,29 +57,16 @@ export const forgotPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    const otp = Math.floor(100000 + Math.random() * 900000);
     const token = crypto.randomBytes(20).toString('hex');
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-    await user.save();
+    user.resetPasswordOtp = otp;
+    user.resetPasswordExpires = Date.now() + 3600000;
+    await user.save({ validateModifiedOnly: true });
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: 'allen.turner19@ethereal.email',
-        pass: 'TrCmyjmNvuqcYgMXfa',
-      },
-    });
-    let options={
-      from: 'allen.turner19@ethereal.email',
-      to:'umashankarp33@gmail.com',
-      subject:"Forgot password link",
-      // text:`This is the link for forgot password ${http://localhost:5000/api/v1/expenseTracker/verify-otp-update-password} this expires in 1 hour`,
-    }
-    await transporter.sendMail();
-    
-    // Send email with reset link containing token
-    // Code for sending email goes here
+    const resetLink = `http://localhost:5000/api/v1/expenseTracker/reset-password?token=${token}`; // Change this URL
+    const emailText = `Use the following link to reset your password. OTP: ${otp}: ${resetLink}`;
+    await sendMail(user.email, 'Password Reset', emailText);
     res.status(200).json({ message: 'Password reset link sent to your email' });
   } catch (error) {
     console.error(error);
@@ -87,20 +74,33 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-export const verifyOTPAndUpdatePassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    const { otp, newPassword, confirmPassword } = req.body;
+    const token = req.query.token;
+    if (!token) {
+      return res.status(400).json({ message: 'Token is required' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
     const user = await User.findOne({
-      email,
-      resetPasswordToken: otp,
+      resetPasswordToken: token,
+      resetPasswordOtp: otp,
       resetPasswordExpires: { $gt: Date.now() },
     });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired OTP' });
+      return res.status(400).json({ message: 'Invalid or expired token/OTP' });
     }
+
     user.password = newPassword;
+    user.confirmPassword = confirmPassword;
     user.resetPasswordToken = undefined;
+    user.resetPasswordOtp = undefined;
     user.resetPasswordExpires = undefined;
+
     await user.save();
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {

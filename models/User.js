@@ -29,6 +29,7 @@ const userSchema = new Schema({
   },
   resetPasswordToken: String, // Store the token for password reset
   resetPasswordExpires: Date, // Expiry time for the reset token
+  resetPasswordOtp:Number,
 });
 
 userSchema.pre('save', async function (next) {
