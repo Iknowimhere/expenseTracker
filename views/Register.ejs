@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Register</h1>
+      <form action="/api/v1/expenseTracker/register" method="post">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="eg:umashankarp33@gmail.com"
+        />
+        <label for="phoneNumber">Phone Number</label>
+        <input type="number" name="phoneNumber" placeholder="eg:9743809874" />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="enter your password"
+        />
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="confirm your password"
+        />
+        <div class="buttons">
+          <button type="submit">Register</button>
+          <button type="reset">Clear</button>
+        </div>
+        <span
+          >Already registered ? Please Login
+          <a href="/api/v1/expenseTracker/login">Login</a></span
+        >
+      </form>
+    </div>
+  </body>
+</html>

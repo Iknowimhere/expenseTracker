@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Login</h1>
+      <form action="/api/v1/expenseTracker/login" method="post">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="eg:umashankarp33@gmail.com"
+        />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="enter your password"
+        />
+        <span
+          >Forgot password? Click this to
+          <a href="/api/v1/expenseTracker/forgot-password"
+            >Reset password</a
+          ></span
+        >
+        <div class="buttons">
+          <button type="submit">Login</button>
+          <button type="reset">Clear</button>
+        </div>
+        <span>
+          Didn't register? Register now
+          <a href="/api/v1/expenseTracker/register">Register</a></span
+        >
+      </form>
+    </div>
+  </body>
+</html>

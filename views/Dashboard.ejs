@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">Expense Tracker</div>
+        <ul>
+          <li><a href="">Expense</a></li>
+          <li>
+            <a href="" onclick="openModal()"
+              ><img
+                src="/images/user.jpg"
+                alt="user"
+                height="40px"
+                width="40px"
+            /></a>
+          </li>
+          <!-- <li><a href="/api/v1/expenseTracker/logout">Logout</a></li> -->
+        </ul>
+      </nav>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <p>
+            <a href="/api/v1/expenseTracker/profile" id="profile-link"
+              >View Profile</a
+            >
+          </p>
+          <p>
+            <a href="/api/v1/expenseTracker/logout" id="logout-link">Logout</a>
+          </p>
+        </div>
+      </div>
+    </header>
+    <div class="form-container">
+      <h1>Add Expense</h1>
+      <form action="/api/v1/expenseTracker/expenses" method="POST">
+        <label for="name">Expense Name</label>
+        <input type="text" id="name" name="name" required />
+        <label for="type">Expense Type</label>
+        <input type="text" id="type" name="type" required />
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" name="amount" required />
+        <button type="submit">Add Expense</button>
+      </form>
+    </div>
+    <section class="table">
+      <h2>List of expenses</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Expense Name</th>
+            <th>Expense Type</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% expenses.forEach(expense => { %>
+          <tr>
+            <td><%= expense.name %></td>
+            <td><%= expense.type %></td>
+            <td><%= expense.amount %></td>
+            <td>
+              <form action="/expenses/<%= expense.id %>/edit" method="POST">
+                <button type="submit">Edit</button>
+              </form>
+              <form action="/expenses/<%= expense.id %>/delete" method="POST">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
+
+    <script src="/js/script.js"></script>
+  </body>
+</html>

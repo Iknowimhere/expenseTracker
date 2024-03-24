@@ -3,6 +3,20 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendMail } from '../utils/sendEmail.js';
 
+export const getRegisterUser = (req, res, next) => {
+  res.render('Register');
+};
+export const getLoginUser = (req, res, next) => {
+  res.render('Login');
+};
+
+export const getForgotPassword = (req, res, next) => {
+  res.render('ForgotPassword');
+};
+
+export const getResetPassword = (req, res, next) => {
+  res.render('ResetPassword');
+};
 export const registerUser = async (req, res, next) => {
   try {
     const { phoneNumber, email, password, confirmPassword } = req.body;
@@ -18,7 +32,11 @@ export const registerUser = async (req, res, next) => {
       password,
       confirmPassword,
     });
-    res.status(201).json(newUser);
+    const token = await jwt.sign({ id: newUser._id }, 'secret', {
+      expiresIn: 24 * 60 * 60,
+    });
+    res.cookie('jwt', token);
+    res.redirect('/api/v1/expenseTracker/expenses');
   } catch (error) {
     res.json({ error: error.message });
   }
@@ -40,10 +58,8 @@ export const loginUser = async (req, res, next) => {
     const token = await jwt.sign({ id: existingUser._id }, 'secret', {
       expiresIn: 24 * 60 * 60,
     });
-    res.json({
-      user: existingUser,
-      token,
-    });
+    res.cookie('jwt', token);
+    res.redirect('/api/v1/expenseTracker/expenses');
   } catch (error) {
     res.json({
       message: error.message,
@@ -100,11 +116,25 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordOtp = undefined;
     user.resetPasswordExpires = undefined;
-
     await user.save();
-    res.status(200).json({ message: 'Password updated successfully' });
+    const tokenjwt = await jwt.sign({ id: user._id }, 'secret', {
+      expiresIn: 24 * 60 * 60,
+    });
+    res.cookie('jwt', tokenjwt);
+    res.redirect('/api/v1/expenseTracker/login');
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('jwt');
+    res.redirect('/api/v1/expenseTracker/login');
+  } catch (error) {
+    res.json({
+      message: error.message,
+    });
   }
 };
