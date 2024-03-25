@@ -30,7 +30,6 @@ export const getExpenseById = async (req, res, next) => {
 
 export const createExpense = async (req, res, next) => {
   try {
-    console.log(req.body);
     const expense = new Expense(req.body);
     await expense.save();
     res.redirect('/api/v1/expenseTracker/expenses');

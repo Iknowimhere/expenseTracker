@@ -27,8 +27,7 @@ const userSchema = new Schema({
       message: "password and confirm password doesn't match",
     },
   },
-  resetPasswordToken: String, // Store the token for password reset
-  resetPasswordExpires: Date, // Expiry time for the reset token
+  resetPasswordOtpExpires: Date, 
   resetPasswordOtp:Number,
 });
 
