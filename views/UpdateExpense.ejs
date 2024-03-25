@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Update Expense</h1>
+      <form
+        action="/api/v1/expenseTracker/expenses/<%= expense._id%>?_method=PUT"
+        method="POST"
+        id="expense-form"
+      >
+        <label for="name">Expense Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          value="<%= expense.name%>"
+        />
+        <label for="type">Expense Type</label>
+        <input
+          type="text"
+          id="type"
+          name="type"
+          required
+          value="<%= expense.type%>"
+        />
+        <label for="amount">Amount</label>
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          required
+          value="<%= expense.amount%>"
+        />
+        <button type="submit">Update Expense</button>
+      </form>
+    </div>
+  </body>
+</html>

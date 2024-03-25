@@ -1,33 +1,32 @@
-
-  let profileLink = document.getElementById('profile-link');
-  if (profileLink) {
-    profileLink.addEventListener('click', function (event) {
-      event.preventDefault();
-      window.location.href = '/api/v1/expenseTracker/profile';
-    });
-
-  }
-  let logoutLink = document.getElementById('logout-link');
-  if (logoutLink) {
-    logoutLink.addEventListener('click', function (event) {
-      event.preventDefault();
-      window.location.href = '/api/v1/expenseTracker/logout';
-    });
-  }
-
+let logoutLink = document.getElementById('logout-link');
+if (logoutLink) {
+  logoutLink.addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = '/api/v1/expenseTracker/logout';
+  });
+}
 
 function openModal() {
-  document.getElementById('myModal').style.display = 'block';
+  let modal = document.getElementById('myModal');
+  if (modal) {
+    modal.style.display = 'block';
+  } else {
+    console.error('Modal element not found');
+  }
 }
 
 function closeModal() {
-  document.getElementById('myModal').style.display = 'none';
+  let modal = document.getElementById('myModal');
+  if (modal) {
+    modal.style.display = 'none';
+  } else {
+    console.error('Modal element not found');
+  }
 }
 
-document.onclick = function (event) {
-  event.preventDefault();
+document.addEventListener('click', function (event) {
   let modal = document.getElementById('myModal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
+  if (modal && event.target == modal) {
+    closeModal();
   }
-};
+});

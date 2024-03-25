@@ -13,25 +13,20 @@
         <ul>
           <li><a href="">Expense</a></li>
           <li>
-            <a href="" onclick="openModal()"
-              ><img
-                src="/images/user.jpg"
-                alt="user"
-                height="40px"
-                width="40px"
-            /></a>
+            <img
+              src="/images/user.jpg"
+              alt="user"
+              height="40px"
+              width="40px"
+              onclick="openModal()"
+            />
           </li>
-          <!-- <li><a href="/api/v1/expenseTracker/logout">Logout</a></li> -->
         </ul>
       </nav>
 
       <div id="myModal" class="modal">
         <div class="modal-content">
-          <p>
-            <a href="/api/v1/expenseTracker/profile" id="profile-link"
-              >View Profile</a
-            >
-          </p>
+          <p>Welcome, <%= user.email%></p>
           <p>
             <a href="/api/v1/expenseTracker/logout" id="logout-link">Logout</a>
           </p>
@@ -40,7 +35,11 @@
     </header>
     <div class="form-container">
       <h1>Add Expense</h1>
-      <form action="/api/v1/expenseTracker/expenses" method="POST">
+      <form
+        action="/api/v1/expenseTracker/expenses"
+        method="POST"
+        id="expense-form"
+      >
         <label for="name">Expense Name</label>
         <input type="text" id="name" name="name" required />
         <label for="type">Expense Type</label>
@@ -68,10 +67,16 @@
             <td><%= expense.type %></td>
             <td><%= expense.amount %></td>
             <td>
-              <form action="/expenses/<%= expense.id %>/edit" method="POST">
-                <button type="submit">Edit</button>
-              </form>
-              <form action="/expenses/<%= expense.id %>/delete" method="POST">
+              <a
+                href="/api/v1/expenseTracker/expenses/<%= expense.id %>"
+                method="POST"
+              >
+                Edit
+              </a>
+              <form
+                action="/api/v1/expenseTracker/expenses/<%= expense.id %>?_method=DELETE"
+                method="POST"
+              >
                 <button type="submit">Delete</button>
               </form>
             </td>

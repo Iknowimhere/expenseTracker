@@ -10,6 +10,7 @@ import {
   registerUser,
   resetPassword,
 } from '../controllers/authControllers.js';
+import { isLogged } from '../middleware/auth.js';
 
 let userRouter = express.Router();
 
@@ -21,6 +22,6 @@ userRouter.post('/forgot-password', forgotPassword);
 userRouter.get('/forgot-password', getForgotPassword);
 userRouter.get('/reset-password', getResetPassword);
 userRouter.post('/reset-password', resetPassword);
-userRouter.get('/logout', logout);
+userRouter.get('/logout', isLogged,logout);
 
 export default userRouter;
